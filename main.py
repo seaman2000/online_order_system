@@ -42,4 +42,20 @@ order = Order(george, standard)
 order.add_item(laptop, 2)
 order.add_item(book, 3)
 
+#calculations test
 print(order.calculate_total())
+
+#statе behavior
+print(order.status)
+
+order.pay()
+print(order.status)
+
+order.ship()
+print(order.status)
+
+order.completed()
+print(order.status)
+
+order.cancel()
+print(order.status)
