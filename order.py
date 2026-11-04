@@ -1,5 +1,4 @@
-from online_order_system.products import PhysicalProduct
-from product import Product
+from products import Product, PhysicalProduct
 from customer import Customer
 from shipping import ShippingPolicy
 
