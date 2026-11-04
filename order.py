@@ -1,3 +1,4 @@
+from online_order_system.products import PhysicalProduct
 from product import Product
 from customer import Customer
 from shipping import ShippingPolicy
@@ -6,7 +7,6 @@ class OrderItem:
     def __init__(self, product, quantity):
         self.product = product
         self.quantity = quantity
-        self.items = [self.product, self.quantity]
 
     @property
     def product(self):
@@ -32,9 +32,9 @@ class OrderItem:
         return self.quantity * self.product.price
 
 class Order:
-    def __init__(self, customer, item_order, shipping_policy, status=None):
+    def __init__(self, customer, shipping_policy, status='created'):
         self.customer = customer
-        self.item_order = item_order
+        self.item_order = []
         self.shipping_policy = shipping_policy
         self.status = status
 
@@ -65,12 +65,14 @@ class Order:
             raise TypeError
         if item in self.item_order:
             self.item_order.remove(item)
+        else:
+            raise Exception('item is not in the current list')
 
     def calculate_products_total(self):
         subtotal = 0
 
         if not self.item_order:
-            raise ValueError('there are not orders')
+            raise ValueError('there are no orders')
         for item in self.item_order:
             subtotal += item.subtotal()
         return subtotal
@@ -78,10 +80,8 @@ class Order:
     def calculate_total_weight(self):
         total_weight = 0
         for item in self.item_order:
-            if item.product.weight:
+            if isinstance(item.product, PhysicalProduct):
                 total_weight += item.product.weight * item.quantity
-            else:
-                pass
         return total_weight
 
     def calculate_total(self):
@@ -90,9 +90,6 @@ class Order:
     def change_shipping_policy(self, new_policy):
         self.shipping_policy = new_policy
 
-    def create(self):
-        if self.status is None:
-            self.status = 'created'
 
     def pay(self):
         if self.status == 'created':
@@ -107,5 +104,5 @@ class Order:
             self.status = 'completed'
 
     def cancel(self):
-        if self.status != 'completed':
+        if self.status != 'completed' and self.status != 'shipped':
             self.status = 'canceled'

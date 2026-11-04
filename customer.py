@@ -32,7 +32,7 @@ class Customer:
     @address.setter
     def address(self, value):
         if not isinstance(value, str):
-            raise TypeError('email should be a string')
+            raise TypeError('address should be a string')
         if not value.strip():
-            raise ValueError('email cannot be empty')
+            raise ValueError('address cannot be empty')
         self._address = value
